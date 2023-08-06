@@ -7,6 +7,9 @@ const TOKENS = {
   LN: '\n',
   SP: ' ',
   VT: '\t',
+  EQUAL_SIGN: '=',
+  SINGLE_QUOTE: '\'',
+  DOUBLE_QUOTE: '"',
 }
 
 export {

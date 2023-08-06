@@ -9,7 +9,7 @@ class Node {
    * @param {Node|null} parent 
    * @returns 
    */
-  constructor(tagOrNode, isOpen, parent = null, text = '' ) {
+  constructor(tagOrNode, isOpen, parent = null, text = '', attributes = {} ) {
     if (tagOrNode instanceof Node) {
       this.#clone(tagOrNode);
       return;
@@ -20,14 +20,20 @@ class Node {
     this.children = [];
     this.tag = tagOrNode;
     this.text = text;
+    this.attributes = attributes;
   }
 
   #clone(node) {
+    this.attributes = node.getAttributes();
     this.parent = node.getParent();
     this.children = node.getChildren();
     this.tag = node.getTag();
     this.isOpen = node.getIsOpen();
     this.text = node.getText();
+  }
+
+  getAttributes() {
+    return this.attributes;
   }
 
   getText() {
@@ -58,6 +64,11 @@ class Node {
     this.parent = parent;
   }
 
+  /**
+   * 
+   * @param {string} tag 
+   * @returns {Node|Node[]}
+   */
   findNodes(tag) {
     const result = [];
 
@@ -65,6 +76,10 @@ class Node {
       if (child.getTag() === tag) {
         result.push(child);
       }
+    }
+
+    if (result.length === 1) {
+      return result.pop();
     }
 
     return result;
@@ -83,6 +98,11 @@ class Tree {
   constructor() {
     this.root = null;
   }
+
+  findNodes(tag) {
+    return this.root.findNodes(tag);
+  }
+
   getRoot() {
     return this.root;
   }
