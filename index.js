@@ -5,9 +5,7 @@ function parse(html) {
   const tree = new structures.Tree();
   const len = html.length;
   const tags = [];
-  const list = new structures.List();
-
-  // list.push(tree);
+  const stack = new structures.Stack();
 
   let tag = [];
   let textNode = [];
@@ -33,7 +31,7 @@ function parse(html) {
 
 
         if (textNode.length) {
-          const parentNode = list.top();
+          const parentNode = stack.top();
           const node = new structures.Node('TextNode', false,  parentNode, textNode.join(TOKENS.EMTPY_TOKEN));
   
           parentNode.addChild(node);
@@ -51,7 +49,7 @@ function parse(html) {
         if (!tag.includes(TOKENS.BACKSLACH)) {
           tags.push(tagName);
 
-          const parentNode = list.top();
+          const parentNode = stack.top();
 
           const node = new structures.Node(tagName, true,  parentNode);
 
@@ -61,17 +59,17 @@ function parse(html) {
             parentNode.addChild(node);
           }  
 
-          list.push(node);
+          stack.push(node);
           
         } else if (tag.includes(TOKENS.BACKSLACH)) {
-          const prev = list.top();
+          const prev = stack.top();
 
           if (prev.getTag() !== tagName && prev.getIsOpen()) {
             const node = new structures.Node(tagName, false, prev);
             prev.addChild(node);
             tags.push(tagName);
           } else if (prev.getTag() === tagName && prev.getIsOpen()) {
-            list.pop();
+            stack.pop();
           }
         }
         
@@ -80,7 +78,7 @@ function parse(html) {
       } 
     }
 
-    const currentTag = list.top();
+    const currentTag = stack.top();
 
     if (tagIsOpened) {
       tag.push(char);
